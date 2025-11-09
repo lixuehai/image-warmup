@@ -1,0 +1,27 @@
+# permissions for end users to edit imagewarmups.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app.kubernetes.io/name: image-warmup
+    app.kubernetes.io/managed-by: kustomize
+  name: imagewarmup-editor-role
+rules:
+- apiGroups:
+  - warmup.crd.lixuehai.com
+  resources:
+  - imagewarmups
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - warmup.crd.lixuehai.com
+  resources:
+  - imagewarmups/status
+  verbs:
+  - get

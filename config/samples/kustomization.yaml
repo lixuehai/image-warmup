@@ -1,0 +1,4 @@
+## Append samples of your project ##
+resources:
+- warmup_v1_imagewarmup.yaml
+# +kubebuilder:scaffold:manifestskustomizesamples

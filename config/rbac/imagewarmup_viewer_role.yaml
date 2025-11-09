@@ -1,0 +1,23 @@
+# permissions for end users to view imagewarmups.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app.kubernetes.io/name: image-warmup
+    app.kubernetes.io/managed-by: kustomize
+  name: imagewarmup-viewer-role
+rules:
+- apiGroups:
+  - warmup.crd.lixuehai.com
+  resources:
+  - imagewarmups
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - warmup.crd.lixuehai.com
+  resources:
+  - imagewarmups/status
+  verbs:
+  - get

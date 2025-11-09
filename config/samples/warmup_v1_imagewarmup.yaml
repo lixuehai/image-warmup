@@ -1,0 +1,9 @@
+apiVersion: warmup.crd.lixuehai.com/v1
+kind: ImageWarmup
+metadata:
+  labels:
+    app.kubernetes.io/name: image-warmup
+    app.kubernetes.io/managed-by: kustomize
+  name: imagewarmup-sample
+spec:
+  # TODO(user): Add fields here
