@@ -28,18 +28,101 @@ type ImageWarmupSpec struct {
 	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
 
-	// Foo is an example field of ImageWarmup. Edit imagewarmup_types.go to remove/update
-	Foo string `json:"foo,omitempty"`
+	Images []ImageSpec `json:"images,omitempty"`
+
+	// Schedule to use.
+	// +optional
+	Schedule string `json:"schedule,omitempty"`
+
+	// Concurrency to use.
+	// +optional
+	// +kubebuilder:default:=3
+	// +kubebuilder:validation:Minimum:=1
+	// +kubebuilder:validation:Maximum:=10
+	Concurrency int `json:"concurrency,omitempty"`
+
+	// Timeout to use.
+	// +optional
+	// +kubebuilder:default:=300
+	Timeout int `json:"timeout,omitempty"`
+}
+
+// ImageSpec defines the image to warmup.
+type ImageSpec struct {
+	// The image to warmup.
+	Image string `json:"image"`
+
+	// The pull secret to use.
+	// +optional
+	PullSecret string `json:"pullSecret,omitempty"`
+
+	// The nodes to warmup the image on.
+	// +optional
+	Nodes []string `json:"nodes,omitempty"`
+
+	// The retry count to use.
+	// +optional
+	// +kubebuilder:default:=3
+	RetryCount int `json:"retryCount,omitempty"`
 }
 
 // ImageWarmupStatus defines the observed state of ImageWarmup.
 type ImageWarmupStatus struct {
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
+
+	// Phase is the current phase of the ImageWarmup.
+	Phase string `json:"phase,omitempty"`
+
+	// WarmedUpImages is the list of images that have been warmed up.
+	WarmedUpImages []WarmedImage `json:"warmedUpImages,omitempty"`
+
+	// FailedImages is the list of images that have failed to warm up.
+	FailedImages []FailedImage `json:"failedImages,omitempty"`
+
+	// Message is the message of the ImageWarmup.
+	Message string `json:"message,omitempty"`
+
+	// Conditions is the list of conditions of the ImageWarmup.
+	Conditions []metav1.Condition `json:"conditions,omitempty"`
+}
+
+type FailedImage struct {
+	// Image is the image that failed to warm up.
+	Image string `json:"image"`
+
+	// Nodes is the list of nodes that the image failed to warm up on.
+	Nodes []string `json:"nodes,omitempty"`
+
+	// Error is the error message of the image failed to warm up.
+	Error string `json:"error,omitempty"`
+
+	// RetryCount is the retry count of the image failed to warm up.
+	RetryCount int `json:"retryCount,omitempty"`
+
+	// LastAttemptTime is the time when the image failed to warm up.
+	LastAttemptTime metav1.Time `json:"lastAttemptTime,omitempty"`
+}
+
+// WarmedImage is the image that has been warmed up.
+type WarmedImage struct {
+	// Image is the image that was warmed up.
+	Image string `json:"image"`
+
+	// Nodes is the list of nodes that the image was warmed up on.
+	Nodes []string `json:"nodes,omitempty"`
+
+	// WarmupTime is the time when the image was warmed up.
+	WarmupTime metav1.Time `json:"warmupTime,omitempty"`
 }
 
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
+// +kubebuilder:printcolumn:name="Phase",type="string",JSONPath=".status.phase",description="The phase of the ImageWarmup"
+// +kubebuilder:printcolumn:name="WarmedUpImages",type="string",JSONPath=".status.warmedUpImages",description="The images that have been warmed up"
+// +kubebuilder:printcolumn:name="FailedImages",type="string",JSONPath=".status.failedImages",description="The images that have failed to warm up"
+// +kubebuilder:printcolumn:name="Message",type="string",JSONPath=".status.message",description="The message of the ImageWarmup"
+// +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp",description="The age of the ImageWarmup"
 
 // ImageWarmup is the Schema for the imagewarmups API.
 type ImageWarmup struct {

@@ -1,8 +1,6 @@
 # image-warmup
-// TODO(user): Add simple overview of use/purpose
+镜像预热的主要目的是在节点上提前拉取所需的镜像，以减少后续Pod调度时的镜像拉取时间
 
-## Description
-// TODO(user): An in-depth paragraph about your project and overview of use
 
 ## Getting Started
 
